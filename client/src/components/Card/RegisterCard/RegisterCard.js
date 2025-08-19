@@ -4,7 +4,7 @@ import './RegisterCard.css';
 
 const RegisterCard = () => {
     const [formData, setFormData] = useState({
-        name: '',   // ✅ changed from firstName/lastName/username to just `name`
+        name: '',
         email: '',
         password: ''
     });
@@ -27,13 +27,20 @@ const RegisterCard = () => {
         setError('');
         setSuccess('');
 
+        // Validate fields before sending
+        if (!formData.name || !formData.email || !formData.password) {
+            setError('All fields are required');
+            setLoading(false);
+            return;
+        }
+
         try {
             const response = await fetch('https://srikalmart-1.onrender.com/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData)   // ✅ sends {name, email, password}
+                body: JSON.stringify(formData)  // sends { name, email, password }
             });
 
             const data = await response.json();
@@ -68,7 +75,7 @@ const RegisterCard = () => {
                         <label className="name__label input__label">Full Name</label>
                         <input 
                             type="text" 
-                            name="name"   // ✅ backend expects `name`
+                            name="name"
                             className="name__input register__input" 
                             value={formData.name}
                             onChange={handleChange}
@@ -110,7 +117,7 @@ const RegisterCard = () => {
                 </form>
                 <div className="register__other__actions">
                     <div className="register__login__account">
-                        Already have account? <Link to="/account/login">Login</Link>
+                        Already have an account? <Link to="/account/login">Login</Link>
                     </div>
                 </div>
             </div>
