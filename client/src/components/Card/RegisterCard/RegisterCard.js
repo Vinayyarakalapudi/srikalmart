@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import './RegisterCard.css';
 
 const RegisterCard = () => {
+    const navigate = useNavigate(); // ✅ inside component
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -42,7 +43,7 @@ const RegisterCard = () => {
             if (response.ok) {
                 setSuccess('Account created successfully!');
                 setTimeout(() => {
-                    window.location.href = '/account/login';
+                    navigate('/account/login'); // ✅ use navigate
                 }, 1500);
             } else {
                 setError(data.message || 'Registration failed');
