@@ -1,0 +1,151 @@
+.login__card__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background-color: #f9f9f9;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login__card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    border: 1px solid #f0f0f0;
+}
+
+.login__header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login__header h1 {
+    color: #333;
+    font-size: 28px;
+    font-weight: 600;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login__inputs {
+    margin-bottom: 20px;
+}
+
+.input__container {
+    margin-bottom: 20px;
+}
+
+.input__label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login__input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+}
+
+.login__input:focus {
+    outline: none;
+    border-color: #FFE26E;
+    background-color: white;
+    box-shadow: 0 0 0 2px rgba(255, 226, 110, 0.2);
+}
+
+.login__button__container {
+    margin-top: 30px;
+}
+
+.login__button {
+    width: 100%;
+    padding: 14px;
+    background-color: #FFE26E;
+    color: #333;
+    border: 2px dashed #FFE26E;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login__button:hover:not(:disabled) {
+    background-color: #FFD700;
+    border-color: #FFD700;
+    transform: translateY(-1px);
+}
+
+.login__button:disabled {
+    background-color: #f0f0f0;
+    border-color: #ccc;
+    color: #999;
+    cursor: not-allowed;
+}
+
+.login__other__actions {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.login__forgot__password {
+    color: #ff6b6b;
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+    transition: color 0.3s ease;
+}
+
+.login__forgot__password:hover {
+    color: #ff5252;
+}
+
+.login__new__account {
+    color: #666;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login__new__account a {
+    color: #ff6b6b;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login__new__account a:hover {
+    color: #ff5252;
+    text-decoration: underline;
+}
+
+.error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    border: 1px solid #ffcdd2;
+}
+
+.success-message {
+    background-color: #e8f5e8;
+    color: #2e7d32;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    border: 1px solid #c8e6c9;
+}
