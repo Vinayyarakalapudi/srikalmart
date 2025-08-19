@@ -29,12 +29,19 @@ const RegisterCard = () => {
         setSuccess('');
 
         try {
+            // ✅ Merge firstName + lastName into "username"
+            const payload = {
+                username: `${formData.firstName} ${formData.lastName}`.trim(),
+                email: formData.email,
+                password: formData.password
+            };
+
             const response = await fetch('https://srikalmart-1.onrender.com/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             });
 
             const data = await response.json();
