@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 const authController = {
     // Register user
@@ -7,15 +8,19 @@ const authController = {
         try {
             const { firstName, lastName, email, password } = req.body;
 
+            if (!firstName || !lastName || !email || !password) {
+                return res.status(400).json({ message: 'All fields are required' });
+            }
+
             const existingUser = await User.findOne({ email });
             if (existingUser) {
                 return res.status(400).json({ message: 'User already exists' });
             }
 
-            // Combine firstName + lastName
+            const hashedPassword = await bcrypt.hash(password, 10);
             const name = `${firstName} ${lastName}`.trim();
 
-            const user = new User({ name, firstName, lastName, email, password });
+            const user = new User({ name, firstName, lastName, email, password: hashedPassword });
             await user.save();
 
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'your-secret-key', { expiresIn: '7d' });
@@ -40,11 +45,13 @@ const authController = {
     login: async (req, res) => {
         try {
             const { email, password } = req.body;
-            
+            if (!email || !password) return res.status(400).json({ message: 'Email and password are required' });
+
             const user = await User.findOne({ email });
-            if (!user || !(await user.comparePassword(password))) {
-                return res.status(401).json({ message: 'Invalid credentials' });
-            }
+            if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET || 'your-secret-key', { expiresIn: '7d' });
 
@@ -67,12 +74,7 @@ const authController = {
     // Get current user data
     getCurrentUser: async (req, res) => {
         try {
-            const token = req.header('Authorization')?.replace('Bearer ', '');
-            if (!token) return res.status(401).json({ message: 'No token provided' });
-
-            const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-            const user = await User.findById(decoded.id).select('-password');
-
+            const user = await User.findById(req.user._id).select('-password');
             if (!user) return res.status(404).json({ message: 'User not found' });
 
             res.json({
@@ -83,7 +85,8 @@ const authController = {
                 email: user.email
             });
         } catch (error) {
-            res.status(401).json({ message: 'Invalid token' });
+            console.error("Get user error:", error);
+            res.status(500).json({ message: 'Server error' });
         }
     }
 };
