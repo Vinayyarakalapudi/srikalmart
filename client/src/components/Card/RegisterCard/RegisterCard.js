@@ -4,7 +4,8 @@ import './RegisterCard.css';
 
 const RegisterCard = () => {
     const [formData, setFormData] = useState({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: ''
     });
@@ -27,20 +28,13 @@ const RegisterCard = () => {
         setError('');
         setSuccess('');
 
-        // Validate fields before sending
-        if (!formData.name || !formData.email || !formData.password) {
-            setError('All fields are required');
-            setLoading(false);
-            return;
-        }
-
         try {
             const response = await fetch('https://srikalmart-1.onrender.com/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData)  // sends { name, email, password }
+                body: JSON.stringify(formData)
             });
 
             const data = await response.json();
@@ -71,13 +65,24 @@ const RegisterCard = () => {
                 {success && <div className="success-message">{success}</div>}
                 
                 <form onSubmit={handleSubmit} className="register__inputs">
-                    <div className="name__input__container reg__input__container">
-                        <label className="name__label input__label">Full Name</label>
+                    <div className="fname__input__container reg__input__container">
+                        <label className="fname__label input__label">First name</label>
                         <input 
                             type="text" 
-                            name="name"
-                            className="name__input register__input" 
-                            value={formData.name}
+                            name="firstName"
+                            className="fname__input register__input" 
+                            value={formData.firstName}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="lname__input__container reg__input__container">
+                        <label className="lname__label input__label">Last name</label>
+                        <input 
+                            type="text" 
+                            name="lastName"
+                            className="lname__input register__input"
+                            value={formData.lastName}
                             onChange={handleChange}
                             required
                         />
@@ -117,7 +122,7 @@ const RegisterCard = () => {
                 </form>
                 <div className="register__other__actions">
                     <div className="register__login__account">
-                        Already have an account? <Link to="/account/login">Login</Link>
+                        Already have account? <Link to="/account/login">Login</Link>
                     </div>
                 </div>
             </div>
