@@ -130,4 +130,4 @@ const RegisterCard = () => {
      );
 }
  
-export default RegisterCard;    is it ok
+export default RegisterCard; 
