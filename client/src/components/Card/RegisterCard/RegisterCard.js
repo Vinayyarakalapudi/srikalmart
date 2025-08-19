@@ -4,8 +4,7 @@ import './RegisterCard.css';
 
 const RegisterCard = () => {
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
+        name: '',   // ✅ changed from firstName/lastName/username to just `name`
         email: '',
         password: ''
     });
@@ -29,19 +28,12 @@ const RegisterCard = () => {
         setSuccess('');
 
         try {
-            // ✅ Merge firstName + lastName into "username"
-            const payload = {
-                username: `${formData.firstName} ${formData.lastName}`.trim(),
-                email: formData.email,
-                password: formData.password
-            };
-
             const response = await fetch('https://srikalmart-1.onrender.com/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(formData)   // ✅ sends {name, email, password}
             });
 
             const data = await response.json();
@@ -72,24 +64,13 @@ const RegisterCard = () => {
                 {success && <div className="success-message">{success}</div>}
                 
                 <form onSubmit={handleSubmit} className="register__inputs">
-                    <div className="fname__input__container reg__input__container">
-                        <label className="fname__label input__label">First name</label>
+                    <div className="name__input__container reg__input__container">
+                        <label className="name__label input__label">Full Name</label>
                         <input 
                             type="text" 
-                            name="firstName"
-                            className="fname__input register__input" 
-                            value={formData.firstName}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="lname__input__container reg__input__container">
-                        <label className="lname__label input__label">Last name</label>
-                        <input 
-                            type="text" 
-                            name="lastName"
-                            className="lname__input register__input"
-                            value={formData.lastName}
+                            name="name"   // ✅ backend expects `name`
+                            className="name__input register__input" 
+                            value={formData.name}
                             onChange={handleChange}
                             required
                         />
