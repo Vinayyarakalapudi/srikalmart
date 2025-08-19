@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import './LoginCard.css';
-
-const LoginCard = () => {
+import './RegisterCard.css';
+const navigate = useNavigate();
+const RegisterCard = () => {
     const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
         email: '',
         password: ''
     });
@@ -27,7 +29,7 @@ const LoginCard = () => {
         setSuccess('');
 
         try {
-            const response = await fetch('https://srikalmart-1.onrender.com/api/auth/login', {
+            const response = await fetch('https://srikalmart-1.onrender.com/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -38,15 +40,12 @@ const LoginCard = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setSuccess('Login successful!');
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
-                
+                setSuccess('Account created successfully!');
                 setTimeout(() => {
-                    window.location.href = '/';
+                    window.location.href = '/account/login';
                 }, 1500);
             } else {
-                setError(data.message || 'Login failed');
+                setError(data.message || 'Registration failed');
             }
         } catch (err) {
             setError('Network error. Please try again.');
@@ -56,54 +55,74 @@ const LoginCard = () => {
     };
 
     return ( 
-        <div className="login__card__container">
-            <div className="login__card">
-                <div className="login__header">
-                    <h1>Login</h1>
+        <div className="register__card__container">
+            <div className="register__card">
+                <div className="register__header">
+                    <h1>Create Account</h1>
                 </div>
                 
                 {error && <div className="error-message">{error}</div>}
                 {success && <div className="success-message">{success}</div>}
                 
-                <form onSubmit={handleSubmit} className="login__inputs">
-                    <div className="email__input__container input__container">
+                <form onSubmit={handleSubmit} className="register__inputs">
+                    <div className="fname__input__container reg__input__container">
+                        <label className="fname__label input__label">First name</label>
+                        <input 
+                            type="text" 
+                            name="firstName"
+                            className="fname__input register__input" 
+                            value={formData.firstName}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="lname__input__container reg__input__container">
+                        <label className="lname__label input__label">Last name</label>
+                        <input 
+                            type="text" 
+                            name="lastName"
+                            className="lname__input register__input"
+                            value={formData.lastName}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="email__input__container reg__input__container">
                         <label className="email__label input__label">Email</label>
                         <input 
                             type="email" 
                             name="email"
-                            className="email__input login__input" 
+                            className="email__input register__input" 
                             placeholder='example@gmail.com'
                             value={formData.email}
                             onChange={handleChange}
                             required
                         />
                     </div>
-                    <div className="password__input__container input__container">
+                    <div className="password__input__container reg__input__container">
                         <label className="password__label input__label">Password</label>
                         <input 
                             type="password" 
                             name="password"
-                            className="password__input login__input" 
-                            placeholder='**********'
+                            className="password__input register__input" 
                             value={formData.password}
                             onChange={handleChange}
                             required
                         />
                     </div>
-                    <div className="login__button__container">
+                    <div className="register__button__container">
                         <button 
                             type="submit"
-                            className="login__button" 
+                            className="register__button" 
                             disabled={loading}
                         >
-                            {loading ? 'Logging in...' : 'LOGIN'}
+                            {loading ? 'Creating Account...' : 'CREATE ACCOUNT'}
                         </button>
                     </div>
                 </form>
-                <div className="login__other__actions">
-                    <div className="login__forgot__password">Forgot password?</div>
-                    <div className="login__new__account">
-                        Don't have account? <Link to="/account/register">Create account</Link>
+                <div className="register__other__actions">
+                    <div className="register__login__account">
+                        Already have account? <Link to="/account/login">Login</Link>
                     </div>
                 </div>
             </div>
@@ -111,4 +130,4 @@ const LoginCard = () => {
      );
 }
  
-export default LoginCard;
+export default RegisterCard;    is it ok
