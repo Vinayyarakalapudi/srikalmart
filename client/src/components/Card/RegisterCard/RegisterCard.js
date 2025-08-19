@@ -1,9 +1,9 @@
-import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import './RegisterCard.css';
 
 const RegisterCard = () => {
-    const navigate = useNavigate(); // ✅ inside component
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -16,10 +16,7 @@ const RegisterCard = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        setFormData(prev => ({ ...prev, [name]: value }));
         setError('');
     };
 
@@ -32,9 +29,7 @@ const RegisterCard = () => {
         try {
             const response = await fetch('https://srikalmart-1.onrender.com/api/auth/register', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
             });
 
@@ -42,9 +37,10 @@ const RegisterCard = () => {
 
             if (response.ok) {
                 setSuccess('Account created successfully!');
-                setTimeout(() => {
-                    navigate('/account/login'); // ✅ use navigate
-                }, 1500);
+                // Save token and user info
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                setTimeout(() => navigate('/'), 1500);
             } else {
                 setError(data.message || 'Registration failed');
             }
@@ -55,80 +51,23 @@ const RegisterCard = () => {
         }
     };
 
-    return ( 
+    return (
         <div className="register__card__container">
             <div className="register__card">
-                <div className="register__header">
-                    <h1>Create Account</h1>
-                </div>
-                
+                <h1>Create Account</h1>
                 {error && <div className="error-message">{error}</div>}
                 {success && <div className="success-message">{success}</div>}
-                
                 <form onSubmit={handleSubmit} className="register__inputs">
-                    <div className="fname__input__container reg__input__container">
-                        <label className="fname__label input__label">First name</label>
-                        <input 
-                            type="text" 
-                            name="firstName"
-                            className="fname__input register__input" 
-                            value={formData.firstName}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="lname__input__container reg__input__container">
-                        <label className="lname__label input__label">Last name</label>
-                        <input 
-                            type="text" 
-                            name="lastName"
-                            className="lname__input register__input"
-                            value={formData.lastName}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="email__input__container reg__input__container">
-                        <label className="email__label input__label">Email</label>
-                        <input 
-                            type="email" 
-                            name="email"
-                            className="email__input register__input" 
-                            placeholder='example@gmail.com'
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="password__input__container reg__input__container">
-                        <label className="password__label input__label">Password</label>
-                        <input 
-                            type="password" 
-                            name="password"
-                            className="password__input register__input" 
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="register__button__container">
-                        <button 
-                            type="submit"
-                            className="register__button" 
-                            disabled={loading}
-                        >
-                            {loading ? 'Creating Account...' : 'CREATE ACCOUNT'}
-                        </button>
-                    </div>
+                    <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
+                    <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
+                    <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
+                    <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
+                    <button type="submit" disabled={loading}>{loading ? 'Creating Account...' : 'CREATE ACCOUNT'}</button>
                 </form>
-                <div className="register__other__actions">
-                    <div className="register__login__account">
-                        Already have account? <Link to="/account/login">Login</Link>
-                    </div>
-                </div>
+                <p>Already have an account? <Link to="/account/login">Login</Link></p>
             </div>
         </div>
-     );
-}
- 
+    );
+};
+
 export default RegisterCard;
