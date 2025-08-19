@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import './RegisterCard.css';
-const navigate = useNavigate();
+
 const RegisterCard = () => {
     const [formData, setFormData] = useState({
         firstName: '',
