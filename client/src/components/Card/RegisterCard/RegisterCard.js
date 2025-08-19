@@ -3,6 +3,7 @@ import { useState } from 'react';
 import './RegisterCard.css';
 
 const RegisterCard = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -42,7 +43,7 @@ const RegisterCard = () => {
             if (response.ok) {
                 setSuccess('Account created successfully!');
                 setTimeout(() => {
-                    window.location.href = '/account/login';
+                   navigate('/account/login');
                 }, 1500);
             } else {
                 setError(data.message || 'Registration failed');
