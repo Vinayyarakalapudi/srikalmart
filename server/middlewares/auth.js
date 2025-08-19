@@ -1,35 +1,15 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const express = require('express');
+const router = express.Router();
+const authController = require('../controllers/authController'); // ensure path is correct
+const authMiddleware = require('../middleware/auth'); // your auth.js middleware
 
-const auth = async (req, res, next) => {
-    try {
-        const token = req.header('Authorization')?.replace('Bearer ', '');
-        
-        if (!token) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Access denied. No token provided.' 
-            });
-        }
+// Public routes
+router.post('/register', authController.register);
+router.post('/login', authController.login);
+router.post('/logout', authController.logout);
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-        const user = await User.findById(decoded.id);
-        
-        if (!user) {
-            return res.status(401).json({ 
-                success: false, 
-                message: 'Invalid token.' 
-            });
-        }
+// Protected routes (require token)
+router.get('/user', authMiddleware, authController.getCurrentUser);
+router.put('/update-profile', authMiddleware, authController.updateProfile);
 
-        req.user = user;
-        next();
-    } catch (error) {
-        res.status(401).json({ 
-            success: false, 
-            message: 'Invalid token.' 
-        });
-    }
-};
-
-module.exports = auth;
+module.exports = router;
