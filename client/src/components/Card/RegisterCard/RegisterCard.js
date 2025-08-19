@@ -1,12 +1,9 @@
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import './RegisterCard.css';
+import './LoginCard.css';
 
-const RegisterCard = () => {
-    const navigate = useNavigate();
+const LoginCard = () => {
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
         email: '',
         password: ''
     });
@@ -16,7 +13,10 @@ const RegisterCard = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
         setError('');
     };
 
@@ -27,22 +27,26 @@ const RegisterCard = () => {
         setSuccess('');
 
         try {
-            const response = await fetch('https://srikalmart-1.onrender.com/api/auth/register', {
+            const response = await fetch('https://srikalmart-1.onrender.com/api/auth/login', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify(formData)
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                setSuccess('Account created successfully!');
-                // Save token and user info
+                setSuccess('Login successful!');
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                setTimeout(() => navigate('/'), 1500);
+                
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1500);
             } else {
-                setError(data.message || 'Registration failed');
+                setError(data.message || 'Login failed');
             }
         } catch (err) {
             setError('Network error. Please try again.');
@@ -51,23 +55,60 @@ const RegisterCard = () => {
         }
     };
 
-    return (
-        <div className="register__card__container">
-            <div className="register__card">
-                <h1>Create Account</h1>
+    return ( 
+        <div className="login__card__container">
+            <div className="login__card">
+                <div className="login__header">
+                    <h1>Login</h1>
+                </div>
+                
                 {error && <div className="error-message">{error}</div>}
                 {success && <div className="success-message">{success}</div>}
-                <form onSubmit={handleSubmit} className="register__inputs">
-                    <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
-                    <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
-                    <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-                    <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
-                    <button type="submit" disabled={loading}>{loading ? 'Creating Account...' : 'CREATE ACCOUNT'}</button>
+                
+                <form onSubmit={handleSubmit} className="login__inputs">
+                    <div className="email__input__container input__container">
+                        <label className="email__label input__label">Email</label>
+                        <input 
+                            type="email" 
+                            name="email"
+                            className="email__input login__input" 
+                            placeholder='example@gmail.com'
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="password__input__container input__container">
+                        <label className="password__label input__label">Password</label>
+                        <input 
+                            type="password" 
+                            name="password"
+                            className="password__input login__input" 
+                            placeholder='**********'
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="login__button__container">
+                        <button 
+                            type="submit"
+                            className="login__button" 
+                            disabled={loading}
+                        >
+                            {loading ? 'Logging in...' : 'LOGIN'}
+                        </button>
+                    </div>
                 </form>
-                <p>Already have an account? <Link to="/account/login">Login</Link></p>
+                <div className="login__other__actions">
+                    <div className="login__forgot__password">Forgot password?</div>
+                    <div className="login__new__account">
+                        Don't have account? <Link to="/account/register">Create account</Link>
+                    </div>
+                </div>
             </div>
         </div>
-    );
-};
-
-export default RegisterCard;
+     );
+}
+ 
+export default LoginCard;
