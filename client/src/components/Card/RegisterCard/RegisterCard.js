@@ -43,7 +43,7 @@ const RegisterCard = () => {
             if (response.ok) {
                 setSuccess('Account created successfully!');
                 setTimeout(() => {
-                   navigate('/account/login');
+                   navigate('/');
                 }, 1500);
             } else {
                 setError(data.message || 'Registration failed');
