@@ -17,10 +17,11 @@ const authController = {
                 return res.status(400).json({ message: 'User already exists' });
             }
 
-            const hashedPassword = await bcrypt.hash(password, 10);
+            // ✅ Define name properly
             const name = `${firstName} ${lastName}`.trim();
 
-            const user = new User({ name, firstName, lastName, email, password: hashedPassword });
+            // ✅ Schema pre-save hook will hash password
+            const user = new User({ name, firstName, lastName, email, password });
             await user.save();
 
             const token = jwt.sign(
